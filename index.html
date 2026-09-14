@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VKU Field Survey</title>
+    <link rel="manifest" href="/manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <span class="material-icons-round header-icon">fact_check</span>
+                <div>
+                    <h1>Khảo sát CSVC</h1>
+                    <p>VKU Campus</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="app-main">
+            <form id="surveyForm" class="modern-form">
+                <div class="input-group">
+                    <label for="room">Phòng / Khu vực</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-round input-icon">room</span>
+                        <input type="text" id="room" required placeholder="VD: V.A.101">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="status">Tình trạng thiết bị</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-round input-icon">build_circle</span>
+                        <select id="status">
+                            <option value="good">Hoạt động bình thường</option>
+                            <option value="broken">Hỏng hóc, cần sửa chữa</option>
+                            <option value="missing">Bị thất lạc / Thiếu</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="notes">Ghi chú chi tiết</label>
+                    <div class="input-wrapper textarea-wrapper">
+                        <span class="material-icons-round input-icon">edit_note</span>
+                        <textarea id="notes" rows="3" placeholder="Mô tả cụ thể tình trạng..."></textarea>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span class="material-icons-round">send</span>
+                    Gửi Báo Cáo
+                </button>
+            </form>
+            <div id="statusMessage"></div>
+        </main>
+    </div>
+    <script src="/app.js"></script>
+</body>
+</html>
