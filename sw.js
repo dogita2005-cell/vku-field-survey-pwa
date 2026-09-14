@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vku-survey-cache-v1';
+const CACHE_NAME = 'vku-interview-cache-v1';
 const ASSETS_TO_CACHE = [
     '/',
     '/index.html',
@@ -12,7 +12,7 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME)
             .then(cache => {
-                console.log('Đang pre-cache tài nguyên lõi...');
+                console.log('Đang pre-cache tài nguyên lõi cho App Phỏng vấn...');
                 return cache.addAll(ASSETS_TO_CACHE);
             })
     );
@@ -38,11 +38,14 @@ self.addEventListener('activate', event => {
 
 // Sự kiện Fetch: Chiến lược Cache-First (Ưu tiên Cache, nếu không có mới gọi Network)
 self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request)
-            .then(cachedResponse => {
-                // Nếu tìm thấy file trong cache, trả về file đó. Nếu không, tải qua mạng.
-                return cachedResponse || fetch(event.request);
-            })
-    );
+    // Bỏ qua các request gọi API (Google Sheets) hoặc extension của trình duyệt
+    if (event.request.url.startsWith('http') && !event.request.url.includes('google')) {
+        event.respondWith(
+            caches.match(event.request)
+                .then(cachedResponse => {
+                    // Nếu tìm thấy file trong cache, trả về file đó. Nếu không, tải qua mạng.
+                    return cachedResponse || fetch(event.request);
+                })
+        );
+    }
 });
