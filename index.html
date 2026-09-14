@@ -3,57 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VKU Field Survey</title>
+    <title>Ứng dụng Phỏng vấn Hiện trường</title>
     <link rel="manifest" href="/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <link rel="stylesheet" href="/style.css">
+    <style>
+        .action-btn { background: #e2e8f0; color: #1e293b; border: none; padding: 10px; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 5px; display: flex; align-items: center; gap: 5px; width: fit-content; }
+        .action-btn:active { background: #cbd5e1; }
+        #photoPreview { max-width: 100%; border-radius: 8px; margin-top: 10px; display: none; }
+    </style>
 </head>
 <body>
     <div class="app-container">
         <header class="app-header">
             <div class="header-content">
-                <span class="material-icons-round header-icon">fact_check</span>
+                <span class="material-icons-round header-icon">assignment_ind</span>
                 <div>
-                    <h1>Khảo sát CSVC</h1>
-                    <p>VKU Campus</p>
+                    <h1>Phỏng vấn Hiện trường</h1>
+                    <p>Thu thập dữ liệu Offline</p>
                 </div>
             </div>
         </header>
 
         <main class="app-main">
-            <form id="surveyForm" class="modern-form">
+            <form id="interviewForm" class="modern-form">
+                
                 <div class="input-group">
-                    <label for="room">Phòng / Khu vực</label>
+                    <label for="sessionName">Phiên phỏng vấn</label>
                     <div class="input-wrapper">
-                        <span class="material-icons-round input-icon">room</span>
-                        <input type="text" id="room" required placeholder="VD: V.A.101">
+                        <span class="material-icons-round input-icon">event_note</span>
+                        <input type="text" id="sessionName" required placeholder="Nhập tên phiên phỏng vấn">
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label for="status">Tình trạng thiết bị</label>
+                    <label for="interviewTime">Thời gian phỏng vấn</label>
                     <div class="input-wrapper">
-                        <span class="material-icons-round input-icon">build_circle</span>
-                        <select id="status">
-                            <option value="good">Hoạt động bình thường</option>
-                            <option value="broken">Hỏng hóc, cần sửa chữa</option>
-                            <option value="missing">Bị thất lạc / Thiếu</option>
-                        </select>
+                        <span class="material-icons-round input-icon">schedule</span>
+                        <input type="datetime-local" id="interviewTime" required>
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label for="notes">Ghi chú chi tiết</label>
+                    <label for="interviewer">Tên người hỏi (Phóng viên/Cán bộ)</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-round input-icon">badge</span>
+                        <input type="text" id="interviewer" required placeholder="Nhập tên người hỏi">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="interviewee">Tên người trả lời (Đối tượng khảo sát)</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-round input-icon">person</span>
+                        <input type="text" id="interviewee" required placeholder="Nhập tên người trả lời">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="qaContent">Nội dung câu hỏi & Trả lời</label>
                     <div class="input-wrapper textarea-wrapper">
-                        <span class="material-icons-round input-icon">edit_note</span>
-                        <textarea id="notes" rows="3" placeholder="Mô tả cụ thể tình trạng..."></textarea>
+                        <span class="material-icons-round input-icon">question_answer</span>
+                        <textarea id="qaContent" rows="4" required placeholder="Ghi chép nội dung phỏng vấn..."></textarea>
                     </div>
+                </div>
+
+                <div class="input-group">
+                    <label>Vị trí hiện trường (GPS)</label>
+                    <div class="input-wrapper">
+                        <span class="material-icons-round input-icon">pin_drop</span>
+                        <input type="text" id="locationData" readonly placeholder="Chưa lấy vị trí">
+                    </div>
+                    <button type="button" id="getLocationBtn" class="action-btn">
+                        <span class="material-icons-round">my_location</span> Lấy tọa độ
+                    </button>
+                </div>
+
+                <div class="input-group">
+                    <label>Ảnh hiện trường</label>
+                    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
+                    <button type="button" id="openCameraBtn" class="action-btn" onclick="document.getElementById('cameraInput').click()">
+                        <span class="material-icons-round">photo_camera</span> Chụp ảnh / Chọn ảnh
+                    </button>
+                    <img id="photoPreview" alt="Ảnh xem trước">
                 </div>
 
                 <button type="submit" class="submit-btn">
-                    <span class="material-icons-round">send</span>
-                    Gửi Báo Cáo
+                    <span class="material-icons-round">cloud_upload</span>
+                    Gửi Dữ Liệu
                 </button>
             </form>
             <div id="statusMessage"></div>

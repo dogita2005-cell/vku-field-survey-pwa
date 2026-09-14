@@ -1,9 +1,9 @@
 {
-  "name": "VKU Field Survey App",
-  "short_name": "VKU Survey",
+  "name": "Ứng dụng Phỏng vấn Hiện trường",
+  "short_name": "Phỏng vấn",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
+  "background_color": "#f4f7f6",
   "theme_color": "#0056b3",
   "icons": [
     {
