@@ -4,4 +4,5 @@
     <string name="title_activity_main">VKU Field Survey</string>
     <string name="package_name">com.vku.survey</string>
     <string name="custom_url_scheme">com.vku.survey</string>
+    <string name="server_client_id">33661412715-85ku5q0vf2em5kkvth1jng6t9hpttqnj.apps.googleusercontent.com</string>
 </resources>

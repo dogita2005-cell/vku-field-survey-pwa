@@ -20,8 +20,10 @@
   "homepage": "https://github.com/dogita2005-cell/vku-field-survey-pwa#readme",
   "dependencies": {
     "@capacitor/android": "^8.5.2",
+    "@capacitor/camera": "^8.2.4",
     "@capacitor/cli": "^8.5.2",
     "@capacitor/core": "^8.5.2",
+    "@capacitor/geolocation": "^8.2.2",
     "@capacitor/local-notifications": "^8.3.1",
     "@codetrix-studio/capacitor-google-auth": "^3.4.0-rc.4"
   }
