@@ -6,66 +6,107 @@ document.addEventListener('DOMContentLoaded', () => {
         Capacitor.Plugins.GoogleAuth.initialize();
     }
 
-    // --- HÀM BẮN THÔNG BÁO ĐẨY ---
-// --- HÀM BẮN THÔNG BÁO ĐẨY ĐÃ SỬA CHUẨN XÁC CHO ANDROID ---
+    // --- HÀM BẮN THÔNG BÁO ĐẨY (đã sửa: id 32-bit, bỏ sound, tạo channel mới) ---
     async function triggerNotification(title, bodyText) {
+        const LN = window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.LocalNotifications;
+        if (!LN) {
+            console.warn('LocalNotifications không có sẵn trong môi trường hiện tại');
+            return;
+        }
         try {
-            if (window.Capacitor && Capacitor.Plugins.LocalNotifications) {
-                // 1. Xin quyền thông báo
-                const permStatus = await Capacitor.Plugins.LocalNotifications.requestPermissions();
-                if (permStatus.display !== 'granted') {
-                    console.log('Người dùng chưa cấp quyền thông báo!');
-                    return;
-                }
-
-                // 2. Tạo kênh thông báo mặc định cho Android (Bắt buộc phải có từ Android 8+)
-                try {
-                    await Capacitor.Plugins.LocalNotifications.createChannel({
-                        id: 'default_channel',
-                        name: 'Thông báo khảo sát',
-                        importance: 5, // Mức độ quan trọng cao nhất để nổ chuông/banner
-                        visibility: 1,
-                        sound: 'default'
-                    });
-                } catch (e) {
-                    console.log('Kênh thông báo có thể đã tồn tại:', e);
-                }
-
-                // 3. Tiến hành bắn thông báo ngay lập tức
-                await Capacitor.Plugins.LocalNotifications.schedule({
-                    notifications: [
-                        {
-                            title: title,
-                            body: bodyText,
-                            id: new Date().getTime(),
-                            channelId: 'default_channel', // Gắn vào kênh đã tạo để Android chịu hiển thị
-                            schedule: { at: new Date(new Date().getTime() + 5000) }
-                        }
-                    ]
-                });
-                console.log('Đã gửi lệnh hiển thị thông báo thành công!');
+            let perm = await LN.checkPermissions();
+            if (perm.display !== 'granted') perm = await LN.requestPermissions();
+            if (perm.display !== 'granted') {
+                console.warn('Người dùng từ chối quyền thông báo');
+                return;
             }
+
+            await LN.createChannel({
+                id: 'survey_channel',
+                name: 'Thông báo khảo sát',
+                description: 'Thông báo từ ứng dụng khảo sát',
+                importance: 5,
+                visibility: 1
+            });
+
+            await LN.schedule({
+                notifications: [{
+                    id: Math.floor(Date.now() / 1000) % 2147483647, // số nguyên 32-bit
+                    title,
+                    body: bodyText,
+                    channelId: 'survey_channel'
+                    // không có "schedule" => hiện ngay lập tức
+                }]
+            });
         } catch (error) {
-            console.error('Lỗi khi bắn thông báo:', error);
+            console.error('Lỗi khi gửi thông báo:', error);
+            alert('Lỗi thông báo: ' + (error.message || JSON.stringify(error))); // xóa dòng này khi đã chạy ổn
         }
     }
-    // 1. Nút Đăng nhập Google
+
+    // --- QUẢN LÝ TRẠNG THÁI ĐĂNG NHẬP ---
     const googleLoginBtn = document.getElementById('googleLoginBtn');
+    const userGreeting = document.getElementById('userGreeting');
+    const userNameText = document.getElementById('userNameText');
+    const logoutBtn = document.getElementById('logoutBtn');
+    let currentUser = null;
+
+    function loadSavedUser() {
+        try { return JSON.parse(localStorage.getItem('vku_user')); } catch (e) { return null; }
+    }
+
+    function saveUser(user) {
+        try {
+            if (user) localStorage.setItem('vku_user', JSON.stringify(user));
+            else localStorage.removeItem('vku_user');
+        } catch (e) { /* bỏ qua nếu storage không khả dụng */ }
+    }
+
+    // Ẩn nút đăng nhập + hiện lời chào (hoặc ngược lại)
+    function updateAuthUI() {
+        const loggedIn = !!currentUser;
+        if (googleLoginBtn) googleLoginBtn.style.display = loggedIn ? 'none' : 'flex';
+        if (userGreeting) userGreeting.style.display = loggedIn ? 'block' : 'none';
+        if (loggedIn && userNameText) userNameText.textContent = currentUser.name;
+    }
+
+    // Khôi phục đăng nhập khi mở lại app (kể cả lúc không có mạng)
+    currentUser = loadSavedUser();
+    updateAuthUI();
+
+    // 1. Nút Đăng nhập / Đăng xuất Google
     if (googleLoginBtn) {
         googleLoginBtn.addEventListener('click', async () => {
             try {
                 const user = await Capacitor.Plugins.GoogleAuth.signIn();
-                const userName = user.name || user.displayName || user.email;
-                alert('Xin chào ' + userName + '!');
+                currentUser = {
+                    name: user.name || user.displayName || user.givenName || user.email,
+                    email: user.email || ''
+                };
+                saveUser(currentUser);
+                updateAuthUI();
             } catch (error) {
                 console.error('Lỗi đăng nhập Google:', error);
-                alert('Đăng nhập thất bại. Xem chi tiết trong console.');
+                alert('Đăng nhập thất bại. Vui lòng thử lại.');
             }
         });
     }
 
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await Capacitor.Plugins.GoogleAuth.signOut();
+            } catch (error) {
+                console.warn('Lỗi signOut (bỏ qua):', error);
+            }
+            currentUser = null;
+            saveUser(null);
+            updateAuthUI();
+        });
+    }
+
     // 2. Đăng ký Service Worker
-    if ('serviceWorker' in navigator) {
+    if ('serviceWorker' in navigator && !(window.Capacitor && Capacitor.isNativePlatform())) {
         navigator.serviceWorker.register('/sw.js')
             .then(reg => console.log('Service Worker đã đăng ký thành công'))
             .catch(err => console.error('Lỗi đăng ký Service Worker:', err));
@@ -151,6 +192,14 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
+            // Chặn gửi nếu chưa đăng nhập
+            if (!currentUser) {
+                statusMsg.textContent = 'Vui lòng đăng nhập Google trước khi gửi dữ liệu!';
+                statusMsg.style.color = 'red';
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
             const surveyData = {
                 sessionName: document.getElementById('sessionName').value,
                 interviewTime: document.getElementById('interviewTime').value,
@@ -159,7 +208,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 qaContent: document.getElementById('qaContent').value,
                 location: locationInput ? locationInput.value : '',
                 photo: photoBase64,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
+                submittedBy: currentUser.email
             };
 
             if (navigator.onLine) {
