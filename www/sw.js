@@ -49,3 +49,46 @@ self.addEventListener('fetch', event => {
         );
     }
 });
+
+// ======================================
+// BACKGROUND SYNC
+// ======================================
+
+self.addEventListener('sync', event => {
+
+    if (
+        event.tag === 'sync-surveys'
+    ) {
+
+        console.log(
+            'Background Sync được kích hoạt'
+        );
+
+        event.waitUntil(
+            notifyClientsToSync()
+        );
+    }
+});
+
+
+// ======================================
+// GỬI YÊU CẦU CHO APP ĐỒNG BỘ
+// ======================================
+
+async function notifyClientsToSync() {
+
+    const clients =
+        await self.clients.matchAll({
+            includeUncontrolled: true,
+            type: 'window'
+        });
+
+    for (
+        const client of clients
+    ) {
+
+        client.postMessage({
+            type: 'SYNC_SURVEYS'
+        });
+    }
+}
