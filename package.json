@@ -1,0 +1,25 @@
+{
+  "name": "vku_field_survey",
+  "version": "1.0.0",
+  "description": "Ứng dụng PWA hỗ trợ thu thập dữ liệu phỏng vấn tại thực địa. Hệ thống cho phép ghi nhận nội dung, định vị tọa độ và chụp ảnh ngay cả khi thiết bị không có kết nối mạng (Offline-First).",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dogita2005-cell/vku-field-survey-pwa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/dogita2005-cell/vku-field-survey-pwa/issues"
+  },
+  "homepage": "https://github.com/dogita2005-cell/vku-field-survey-pwa#readme",
+  "dependencies": {
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2"
+  }
+}
