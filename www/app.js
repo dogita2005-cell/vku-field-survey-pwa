@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             body: bodyText,
                             id: new Date().getTime(),
                             channelId: 'default_channel', // Gắn vào kênh đã tạo để Android chịu hiển thị
-                            schedule: { at: new Date(new Date().getTime() + 100) }
+                            schedule: { at: new Date(new Date().getTime() + 5000) }
                         }
                     ]
                 });
