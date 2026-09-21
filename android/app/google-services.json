@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "33661412715",
+    "project_id": "vku-field",
+    "storage_bucket": "vku-field.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33661412715:android:a5fc14396d789daf6ad82e",
+        "android_client_info": {
+          "package_name": "com.vku.survey"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDYAb3NQli1cIJnL7eekFDhwjwGjC77ON8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

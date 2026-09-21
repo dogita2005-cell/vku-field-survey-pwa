@@ -1,3 +1,18 @@
+// Thay vì dùng import, gọi thẳng biến Capacitor.Plugins
+if (window.Capacitor) {
+    Capacitor.Plugins.GoogleAuth.initialize();
+}
+
+document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+    try {
+        const user = await Capacitor.Plugins.GoogleAuth.signIn();
+        alert('Đăng nhập thành công! Xin chào: ' + user.displayName);
+        // Có thể lưu user.email hoặc user.imageUrl để hiển thị lên UI
+    } catch (error) {
+        console.error('Lỗi đăng nhập Google:', error);
+        alert('Đăng nhập thất bại. Xem chi tiết trong console.');
+    }
+});
 // 1. Đăng ký Service Worker
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
