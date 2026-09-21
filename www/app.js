@@ -44,21 +44,31 @@ document.getElementById('getLocationBtn').addEventListener('click', () => {
     );
 });
 
-// 4. Xử lý Ảnh Chụp (Chuyển đổi thành Base64)
+
+// 4. Xử lý Ảnh Chụp Bằng Capacitor (Lưu vào Gallery)
 let photoBase64 = "";
-const cameraInput = document.getElementById('cameraInput');
+const cameraBtn = document.getElementById('cameraInput'); // Lưu ý đổi input này thành <button> trong HTML
 const photoPreview = document.getElementById('photoPreview');
 
-cameraInput.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(event) {
-            photoBase64 = event.target.result;
-            photoPreview.src = photoBase64;
-            photoPreview.style.display = 'block';
-        };
-        reader.readAsDataURL(file);
+cameraBtn.addEventListener('click', async (e) => {
+    e.preventDefault(); // Chặn hành vi mở file mặc định của web
+    
+    try {
+        // Dùng quyền năng Native của Capacitor để mở Camera
+        const image = await Capacitor.Plugins.Camera.getPhoto({
+            quality: 85,
+            allowEditing: false,
+            resultType: 'base64', // Yêu cầu trả về chuỗi Base64
+            source: 'CAMERA',     // Ép mở Camera điện thoại
+            saveToGallery: true   // TÍNH NĂNG LƯU ẢNH VÀO BỘ SƯU TẬP MÁY
+        });
+
+        // Ghép chuỗi chuẩn để hiển thị lên thẻ <img>
+        photoBase64 = 'data:image/jpeg;base64,' + image.base64String;
+        photoPreview.src = photoBase64;
+        photoPreview.style.display = 'block';
+    } catch (error) {
+        console.error('Lỗi khi chụp ảnh bằng Capacitor:', error);
     }
 });
 

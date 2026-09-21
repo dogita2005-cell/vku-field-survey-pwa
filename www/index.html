@@ -82,11 +82,14 @@
 
                 <div class="input-group">
                     <label>Ảnh hiện trường</label>
-                    <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;">
-                    <button type="button" id="openCameraBtn" class="action-btn" onclick="document.getElementById('cameraInput').click()">
-                        <span class="material-icons-round">photo_camera</span> Chụp ảnh / Chọn ảnh
+                    <!-- Đã xóa hoàn toàn thẻ <input type="file"> -->
+                    
+                    <!-- Nút bấm đã được đổi id thành "cameraInput" và xóa lệnh onclick -->
+                    <button type="button" id="cameraInput" class="action-btn">
+                        <span class="material-icons-round">photo_camera</span> Chụp ảnh
                     </button>
-                    <img id="photoPreview" alt="Ảnh xem trước">
+                    
+                    <img id="photoPreview" alt="Ảnh xem trước" style="display: none;">
                 </div>
 
                 <button type="submit" class="submit-btn">
