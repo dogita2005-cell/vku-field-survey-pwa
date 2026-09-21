@@ -1,5 +1,5 @@
 {
   "appId": "com.vku.survey",
   "appName": "VKU Field Survey",
-  "webDir": "."
+  "webDir": "www"
 }

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/dogita2005-cell/vku-field-survey-pwa#readme",
   "dependencies": {
+    "@capacitor/android": "^8.5.2",
     "@capacitor/cli": "^8.5.2",
     "@capacitor/core": "^8.5.2"
   }
