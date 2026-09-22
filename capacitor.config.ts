@@ -1,0 +1,16 @@
+import { CapacitorConfig } from '@capacitor/cli';
+
+const config: CapacitorConfig = {
+  appId: 'com.vku.survey',
+  appName: 'VKU Field Survey',
+  webDir: 'www',
+  plugins: {
+    GoogleAuth: {
+      scopes: ['profile', 'email'],
+      serverClientId: '33661412715-85ku5q0vf2em5kkvth1jng6t9hpttqnj.apps.googleusercontent.com',
+      forceCodeForRefreshToken: true,
+    },
+  },
+};
+
+export default config;
