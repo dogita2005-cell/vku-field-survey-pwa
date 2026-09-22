@@ -110,6 +110,16 @@ document.addEventListener('DOMContentLoaded', () => {
         navigator.serviceWorker.register('/sw.js')
             .then(reg => console.log('Service Worker đã đăng ký thành công'))
             .catch(err => console.error('Lỗi đăng ký Service Worker:', err));
+
+        // Lắng nghe message từ Service Worker khi Background Sync ('sync-surveys')
+        // được trình duyệt kích hoạt, để thực sự gọi syncOfflineData() thay vì
+        // chỉ trông chờ vào sự kiện 'online' viết tay ở dưới.
+        navigator.serviceWorker.addEventListener('message', (event) => {
+            if (event.data && event.data.type === 'SYNC_SURVEYS') {
+                console.log('📩 Nhận tín hiệu Background Sync từ Service Worker');
+                syncOfflineData();
+            }
+        });
     }
 
     // 3. Nút Xử lý Vị trí (GPS)
